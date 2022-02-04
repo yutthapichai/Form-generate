@@ -1,16 +1,18 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnChanges, ChangeDetectorRef } from '@angular/core';
+import {
+  Component, Input, OnInit, Output, EventEmitter, OnChanges, ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 @Component({
   selector: 'app-render-form',
   templateUrl: './render-form.component.html',
-  styleUrls: ['./render-form.component.scss']
+  styleUrls: ['./render-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class RenderFormComponent implements OnInit, OnChanges {
 
   @Output() formDataOut = new EventEmitter<any>();
-  @Input() formDataNew: any;
   @Input() formDataIn: any;
 
   form = new FormGroup({});
@@ -61,8 +63,14 @@ export class RenderFormComponent implements OnInit, OnChanges {
 
   // ];
 
-  constructor(private ref: ChangeDetectorRef) {
-    ref.detach();
+  
+  // ,
+  // {
+  //  "id": "Agree",
+  //  "value": "",
+  //  "type": "checkbox"
+  //  }
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -70,15 +78,13 @@ export class RenderFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-
-    if (this.formDataIn) {
-      this.model = this.formDataIn
+    if (this.formDataIn?.item) {
+      this.model = { ...this.formDataIn.item }
     }
-    if (this.formDataNew) {
-      const convertData = JSON.stringify(this.formDataNew)
+    if (this.formDataIn?.info) {
+      const convertData = JSON.stringify(this.formDataIn.info)
       const newForm = JSON.parse(convertData)
       this.generateForm(newForm)
-      console.log(newForm, 'newForm')
     }
   }
 
@@ -126,7 +132,6 @@ export class RenderFormComponent implements OnInit, OnChanges {
       }
     }
     this.fields = field
-    this.ref.detectChanges();
 
   }
 

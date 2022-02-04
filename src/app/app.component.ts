@@ -4,16 +4,15 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {
   title = 'Render-Form';
 
   form = new FormGroup({});
-  modelstringify = '';
   model = {
     form: `
     {
@@ -57,15 +56,17 @@ export class AppComponent {
   formLy: any;
 
   onClick(value: any) {
-    this.formLy = value;
-    console.log(value, "value")
-    console.log(this.formLy, "formLy")
+    this.formLy = {
+      item: value
+    }
   }
 
   submit() {
     if (this.form.valid) {
       // alert(JSON.stringify(this.model));
-      this.modelstringify = JSON.parse(this.model.form);
+      this.formLy = {
+        info: JSON.parse(this.model.form)
+      }
     }
   }
 }
